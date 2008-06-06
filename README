@@ -1,13 +1,26 @@
 MassAssignmentMurderer
 ======================
 
-Introduction goes here.
+For all has_many associations you define in your models, Rails creates a mass assignment method, giving you the ability to change specific attributes of your associated models through mass assignment. This can be very dangerous when your users can create new records. For example, if a User has_many Comments, a comment_ids method is added to the User model, which contains an array of all Comments which belong to that User. For more clarification on the dangers of this issue, check out Railscast episode 26.
+
+
+MassAssignmentMurderer disables mass assignment for has_many association assignment methods. An equivalent effect can be achieved by making the appropriate declarations with attr_protected or attr_accessible. If you are already using attr_accessible in all of your models, then you are already safe.
 
 
 Example
 =======
 
-Example goes here.
+class Comment < ActiveRecord::Base
+	belongs_to :user
+end
+
+class User < ActiveRecord::Base
+	# this declaration creates attribute accessor methods for comment_ids
+	has_many :comments
+	
+	# No more mass assignment security hole.
+	has_mass_assignment_murderer
+end
 
 
-Copyright (c) 2008 [name of plugin creator], released under the MIT license
+Copyright (c) 2008 [Alex J. Sharp], released under the MIT license
